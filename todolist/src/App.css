@@ -1,0 +1,256 @@
+:root {
+  /* Dark mode defaults */
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --accent: #4CAF50;  /* Changed to green */
+  --card-bg: #242424;
+  --todo-bg: #2d2d2d;
+  --todo-hover-bg: #333333;
+  --delete-color: #ff6b6b;
+  --checkbox-size: 20px;
+  --max-width: 1280px;
+  --padding: 2rem;
+  --transition-speed: 300ms;
+}
+
+/* Light mode variables override */
+.light-mode {
+  --background: #f8f8f8;
+  --foreground: #282828;
+  --accent: #0066ff;
+  --card-bg: #ffffff;
+  --todo-bg: #e6e6e6;
+  --todo-hover-bg: #cccccc;
+  --delete-color: #d9534f;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background var(--transition-speed), color var(--transition-speed);
+}
+
+#root {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--padding);
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter var(--transition-speed);
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--accent));
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* Container for the entire app */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+/* Card styling */
+.card {
+  background: var(--card-bg);
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.read-the-docs {
+  color: #bbb;
+}
+
+/* Styles for each todo item */
+.todo {
+  display: flex;
+  align-items: center;
+  background: var(--todo-bg);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin: 0;
+  transition: all var(--transition-speed);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.todo:hover {
+  background: var(--todo-hover-bg);
+  transform: translateY(-2px);
+}
+
+/* Custom checkbox styling */
+.todo input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  margin-right: 1rem;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-speed);
+}
+
+.todo input[type="checkbox"]:checked {
+  background-color: var(--accent);
+}
+
+.todo input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  color: #fff;
+  font-size: 14px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Todo text container */
+.todo .todo-text {
+  flex: 1;
+  text-align: left;
+  margin-right: 1rem;
+  font-size: 1.1rem;
+  color: var(--foreground);
+}
+
+/* Input field styling */
+input[type="text"] {
+  flex: 1;
+  width: auto;
+  margin-bottom: 0;
+  padding: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--todo-bg);
+  color: var(--foreground);
+  font-size: 1rem;
+  transition: all var(--transition-speed);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Delete button styling */
+.todo .delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--delete-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all var(--transition-speed);
+}
+
+.todo .delete-btn:hover {
+  background: rgba(255, 107, 107, 0.1);
+  color: var(--delete-color);
+}
+
+/* Input container for search and add button */
+.input-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 20px;
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.input-container input {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Add button styling */
+.add-btn {
+  padding: 12px 24px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.add-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Todo container */
+.todos-container {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.todo-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 480px) {
+  .card {
+    padding: 1rem;
+  }
+
+  .input-container {
+    flex-direction: column;
+  }
+
+  .input-container input,
+  .input-container button {
+    width: 100%;
+  }
+
+  .todo {
+    padding: 0.8rem;
+  }
+}
