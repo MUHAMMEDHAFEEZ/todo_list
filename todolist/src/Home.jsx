@@ -5,6 +5,7 @@ import axios from 'axios';
 function Home() {
     const [Todos, setTodos] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const [checkedTodos, setCheckedTodos] = useState({});
 
     useEffect(() => {
         fetchTodos();
@@ -13,7 +14,8 @@ function Home() {
     const fetchTodos = async () => {
         try {
             const res = await axios.get('http://localhost:3001/');
-            setTodos(res.data.map(todo => todo.task));
+            console.log('Fetched todos:', res.data); // Debug log
+            setTodos(res.data);
         } catch (err) {
             console.error('Error fetching todos:', err);
         }
@@ -22,8 +24,9 @@ function Home() {
     const handleAdd = async () => {
         if (inputValue.trim()) {
             try {
-                await axios.post('http://localhost:3001/add', { task: inputValue });
-                setTodos([...Todos, inputValue]);
+                const response = await axios.post('http://localhost:3001/add', { task: inputValue });
+                console.log('Added todo:', response.data); // Debug log
+                setTodos(prevTodos => [...prevTodos, response.data]);
                 setInputValue('');
             } catch (err) {
                 console.error('Error adding todo:', err);
@@ -34,6 +37,26 @@ function Home() {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleAdd();
+        }
+    };
+
+    const handleCheck = (id) => {
+        setCheckedTodos(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await axios.delete(`http://localhost:3001/delete/${id}`);
+            if (response.status === 200) {
+                // Remove from UI only if successfully deleted from database
+                setTodos(prevTodos => prevTodos.filter(todo => todo._id !== id));
+            }
+        } catch (err) {
+            console.error('Error deleting todo:', err);
+            alert('Failed to delete todo');
         }
     };
 
@@ -62,18 +85,29 @@ function Home() {
                     {Todos.length === 0 ? (
                         <p className="empty-message">No Todos</p>
                     ) : (
-                        Todos.map((todo, index) => (
-                            <div className="todo" key={index}>
+                        Todos.map((todo) => (
+                            <div className="todo" key={todo._id}>
                                 <div className="todo-content">
                                     <input 
                                         type="checkbox" 
-                                        aria-label={`Mark ${todo} as complete`}
+                                        checked={checkedTodos[todo._id] || false}
+                                        onChange={() => handleCheck(todo._id)}
+                                        aria-label={`Mark ${todo.task} as complete`}
                                     />
-                                    <span className="todo-text">{todo}</span>
+                                    <span 
+                                        className="todo-text"
+                                        style={{
+                                            textDecoration: checkedTodos[todo._id] ? 'line-through' : 'none',
+                                            color: checkedTodos[todo._id] ? '#666' : 'inherit'
+                                        }}
+                                    >
+                                        {todo.task}
+                                    </span>
                                 </div>
                                 <button 
                                     className="delete-btn"
-                                    aria-label={`Delete ${todo}`}
+                                    onClick={() => handleDelete(todo._id)}
+                                    aria-label={`Delete ${todo.task}`}
                                 >
                                     <FaTrash />
                                 </button>

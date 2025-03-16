@@ -11,13 +11,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/test')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Could not connect to MongoDB:', err));
 
-    app.get('/', (req, res) => {
-        TodoModel.find().then((result) => {
-            res.json(result);
-        }).catch((err) => {
-            res.json(err);
-        });
+app.get('/', (req, res) => {
+    TodoModel.find().then((result) => {
+        res.json(result);
+    }).catch((err) => {
+        res.json(err);
     });
+});
 
 app.post('/add', (req, res) => {
     const task = req.body.task;
@@ -30,6 +30,18 @@ app.post('/add', (req, res) => {
         }).catch((err) => {
             res.json(err);
         });
+});
+
+app.delete('/delete/:id', async (req, res) => {
+    try {
+        const result = await TodoModel.findByIdAndDelete(req.params.id);
+        if (!result) {
+            return res.status(404).json({ message: 'Todo not found' });
+        }
+        res.json({ message: 'Todo deleted successfully', deletedTodo: result });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
 });
 
 app.listen(3001, () => {
